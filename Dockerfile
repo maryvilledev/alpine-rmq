@@ -1,5 +1,5 @@
 FROM        alpine
-MAINTAINER  Cole Brumley <github.com/colebrumley>
+MAINTAINER  Gonkulator Labs <github.com/gonkulator>
 ENV         RABBITMQ_HOME=/srv/rabbitmq_server-3.5.3 \
             PLUGINS_DIR=/srv/rabbitmq_server-3.5.3/plugins \
             ENABLED_PLUGINS_FILE=/srv/rabbitmq_server-3.5.3/etc/rabbitmq/enabled_plugins \
