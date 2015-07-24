@@ -21,7 +21,7 @@ docker run -it \
   -e SSL_CERT_FILE=/ssl/cert/cert.pem \
   -e SSL_KEY_FILE=/ssl/cert/key.pem \
   -e SSL_CA_FILE=/ssl/CA/cacert.pem \
-  elcolio/rabbitmq
+  gonkulatorlabs/rabbitmq
 ```
 
 ### Customizing
