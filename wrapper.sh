@@ -35,7 +35,7 @@ if [[ "${use_ssl}" == "yes" ]]; then
     # More ENV vars for make clustering happiness
     # we don't handle clustering in this script, but these args should ensure
     # clustered SSL-enabled members will talk nicely
-    export ERL_SSL_PATH="/usr/lib/erlang/lib/ssl-7.0/ebin"
+    export ERL_SSL_PATH="/usr/lib/erlang/lib/ssl-7.1/ebin"
     export RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS="-pa ${ERL_SSL_PATH} -proto_dist inet_tls -ssl_dist_opt server_certfile /opt/combined.pem -ssl_dist_opt server_secure_renegotiate true client_secure_renegotiate true"
     export RABBITMQ_CTL_ERL_ARGS="-pa ${ERL_SSL_PATH} -proto_dist inet_tls -ssl_dist_opt server_certfile /opt/combined.pem -ssl_dist_opt server_secure_renegotiate true client_secure_renegotiate true"
 
