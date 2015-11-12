@@ -7,7 +7,7 @@ trap 'kill $(jobs -p)' EXIT
 set -e
 
 # If long & short hostnames are not the same, use long hostnames
-if ! [[ $(hostname) == $(hostname -s) ]]; then
+if ! [[ "$(hostname)" == "$(hostname -s)" ]]; then
     export RABBITMQ_USE_LONGNAME=true
 fi
 
@@ -27,16 +27,17 @@ if ! [[ -z ${SSL_CA_FILE+x} ]]; then
 fi
 
 if [[ "${use_ssl}" == "yes" ]]; then
+    mkdir -p /opt || true
     # Create combined cert
-    cat ${SSL_CERT_FILE} ${SSL_KEY_FILE} > /tmp/combined.pem
-    chmod 0400 /tmp/combined.pem
+    cat ${SSL_CERT_FILE} ${SSL_KEY_FILE} > /opt/combined.pem
+    chmod 0400 /opt/combined.pem
 
     # More ENV vars for make clustering happiness
     # we don't handle clustering in this script, but these args should ensure
     # clustered SSL-enabled members will talk nicely
     export ERL_SSL_PATH="/usr/lib/erlang/lib/ssl-7.0/ebin"
-    export RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS="-pa ${ERL_SSL_PATH} -proto_dist inet_tls -ssl_dist_opt server_certfile /tmp/combined.pem -ssl_dist_opt server_secure_renegotiate true client_secure_renegotiate true"
-    export RABBITMQ_CTL_ERL_ARGS="-pa ${ERL_SSL_PATH} -proto_dist inet_tls -ssl_dist_opt server_certfile /tmp/combined.pem -ssl_dist_opt server_secure_renegotiate true client_secure_renegotiate true"
+    export RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS="-pa ${ERL_SSL_PATH} -proto_dist inet_tls -ssl_dist_opt server_certfile /opt/combined.pem -ssl_dist_opt server_secure_renegotiate true client_secure_renegotiate true"
+    export RABBITMQ_CTL_ERL_ARGS="-pa ${ERL_SSL_PATH} -proto_dist inet_tls -ssl_dist_opt server_certfile /opt/combined.pem -ssl_dist_opt server_secure_renegotiate true client_secure_renegotiate true"
 
     echo "Launching RabbitMQ with SSL..."
     echo -e " - SSL_CERT_FILE: $SSL_CERT_FILE\n - SSL_KEY_FILE: $SSL_KEY_FILE\n - SSL_CA_FILE: $SSL_CA_FILE"
@@ -55,15 +56,10 @@ ${RABBITMQ_HOME}/sbin/rabbitmq-server &
 # Capture the PID
 rmq_pid=$!
 
-# Wait until the logfile exists
-until [[ -f "${RABBITMQ_HOME}/var/log/rabbitmq/rabbit@${HOSTNAME}.log" ]]; do
-    sleep 1
-done
-
 # Tail the logs, but continue on to the wait command
 echo -e "\n\nTailing log output:"
-tail -f ${RABBITMQ_HOME}/var/log/rabbitmq/rabbit@${HOSTNAME}.log \
-     -f ${RABBITMQ_HOME}/var/log/rabbitmq/rabbit@${HOSTNAME}-sasl.log &
+tail -F ${RABBITMQ_HOME}/var/log/rabbitmq/rabbit@${HOSTNAME}.log \
+     -F ${RABBITMQ_HOME}/var/log/rabbitmq/rabbit@${HOSTNAME}-sasl.log &
 
 # If RMQ dies, this script dies
 wait $rmq_pid
