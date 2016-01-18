@@ -21,7 +21,7 @@ RUN         chmod a+x /usr/bin/wrapper && apk add --update curl tar xz bash && \
             rm -f rabbitmq-server-generic-unix-3.6.0.tar.xz && \
             touch /srv/rabbitmq_server-3.6.0/etc/rabbitmq/enabled_plugins && \
             /srv/rabbitmq_server-3.6.0/sbin/rabbitmq-plugins enable --offline rabbitmq_management && \
-            apk del --purge tar xz
+            apk del --purge tar xz && rm -Rf /var/cache/apk/*
 EXPOSE      5671/tcp 5672/tcp 15672/tcp 15671/tcp
 VOLUME      /var/lib/rabbitmq
 CMD         ["/usr/bin/wrapper"]
