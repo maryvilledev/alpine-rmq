@@ -1,5 +1,5 @@
 # Alpine Linux RabbitMQ Docker image
-Many other RabbitMQ Docker images are [huge](https://imagelayers.io/?images=rabbitmq:latest,frodenas%2Frabbitmq:latest,tutum%2Frabbitmq:latest).  Instead of using the bloated Ubuntu or Fedora images as a base, this image uses the 5MB Alpine Linux base image.  Alpine lets us run RabbitMQ 3.5.4 on Erlang 18.0.2 in only **35MB**!
+Many other RabbitMQ Docker images are [huge](https://imagelayers.io/?images=rabbitmq:latest,frodenas%2Frabbitmq:latest,tutum%2Frabbitmq:latest).  Instead of using the bloated Ubuntu or Fedora images as a base, this image uses the 5MB Alpine Linux base image.  Alpine lets us run RabbitMQ 3.6.0 on Erlang 18.1 in only **35MB**!
 
 ### Usage
 The wrapper script starts RabbitMQ (with management plugin enabled), tails the log, and configures listeners on the standard ports:
