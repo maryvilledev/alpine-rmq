@@ -26,6 +26,10 @@ if ! [[ -z ${SSL_CA_FILE+x} ]]; then
     sed -i "s,CAFILE,$SSL_CA_FILE,g" ${RABBITMQ_HOME}/etc/rabbitmq/ssl.config
 fi
 
+if ! [[ -z ${AUTOCLUSTER_TYPE+x} ]]; then
+    rabbitmq-plugins enable --offline autocluster
+fi
+
 if [[ "${use_ssl}" == "yes" ]]; then
     mkdir -p /opt || true
     # Create combined cert
@@ -51,15 +55,15 @@ fi
 
 # RMQ server process so we can tail the logs
 # to the same stdout
-${RABBITMQ_HOME}/sbin/rabbitmq-server &
+rabbitmq-server &
 
 # Capture the PID
 rmq_pid=$!
 
 # Tail the logs, but continue on to the wait command
-echo -e "\n\nTailing log output:"
+echo "Tailing log output:"
 tail -F ${RABBITMQ_HOME}/var/log/rabbitmq/rabbit@${HOSTNAME}.log \
-     -F ${RABBITMQ_HOME}/var/log/rabbitmq/rabbit@${HOSTNAME}-sasl.log &
+     -F ${RABBITMQ_HOME}/var/log/rabbitmq/rabbit@${HOSTNAME}-sasl.log 2> /dev/null &
 
 # If RMQ dies, this script dies
-wait $rmq_pid
+wait $rmq_pid 2> /dev/null

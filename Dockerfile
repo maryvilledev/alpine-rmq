@@ -1,12 +1,22 @@
 FROM        alpine:3.2
 MAINTAINER  Gonkulator Labs <github.com/gonkulator>
-ENV         RABBITMQ_HOME=/srv/rabbitmq_server-3.6.0 \
-            PLUGINS_DIR=/srv/rabbitmq_server-3.6.0/plugins \
-            ENABLED_PLUGINS_FILE=/srv/rabbitmq_server-3.6.0/etc/rabbitmq/enabled_plugins \
+
+ENV         RABBITMQ_VERSION=3.6.0 \
+            RABBITMQ_AUTOCLUSTER_PLUGIN_VERSION=0.4.1
+ENV         RABBITMQ_HOME=/srv/rabbitmq_server-${RABBITMQ_VERSION} \
+            PLUGINS_DIR=/srv/rabbitmq_server-${RABBITMQ_VERSION}/plugins \
+            ENABLED_PLUGINS_FILE=/srv/rabbitmq_server-${RABBITMQ_VERSION}/etc/rabbitmq/enabled_plugins \
             RABBITMQ_MNESIA_BASE=/var/lib/rabbitmq
-COPY        ssl.config /srv/rabbitmq_server-3.6.0/etc/rabbitmq/
-COPY        standard.config /srv/rabbitmq_server-3.6.0/etc/rabbitmq/
+ENV         PATH=$PATH:$RABBITMQ_HOME/sbin
+
+COPY        ssl.config /srv/rabbitmq_server-${RABBITMQ_VERSION}/etc/rabbitmq/
+COPY        standard.config /srv/rabbitmq_server-${RABBITMQ_VERSION}/etc/rabbitmq/
 COPY        wrapper.sh /usr/bin/wrapper
+
+EXPOSE      5671/tcp 5672/tcp 15672/tcp 15671/tcp
+VOLUME      /var/lib/rabbitmq
+CMD         ["/usr/bin/wrapper"]
+
 RUN         chmod a+x /usr/bin/wrapper && apk add --update curl tar xz bash && \
             echo "http://dl-4.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
             echo "http://dl-4.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
@@ -15,13 +25,15 @@ RUN         chmod a+x /usr/bin/wrapper && apk add --update curl tar xz bash && \
                 erlang-sasl erlang-asn1 erlang-inets erlang-os-mon erlang-xmerl erlang-eldap \
                 erlang-syntax-tools --update-cache --allow-untrusted && \
             cd /srv && \
-            curl -Lv -o /srv/rabbitmq-server-generic-unix-3.6.0.tar.xz \
-              https://github.com/rabbitmq/rabbitmq-server/releases/download/rabbitmq_v3_6_0/rabbitmq-server-generic-unix-3.6.0.tar.xz && \
-            tar -xvf rabbitmq-server-generic-unix-3.6.0.tar.xz && \
-            rm -f rabbitmq-server-generic-unix-3.6.0.tar.xz && \
-            touch /srv/rabbitmq_server-3.6.0/etc/rabbitmq/enabled_plugins && \
-            /srv/rabbitmq_server-3.6.0/sbin/rabbitmq-plugins enable --offline rabbitmq_management && \
+            rmq_zip_url=https://github.com/rabbitmq/rabbitmq-server/releases/download && \
+                rmq_zip_url=${rmq_zip_url}/rabbitmq_v$(echo $RABBITMQ_VERSION | tr '.' '_') && \
+                rmq_zip_url=${rmq_zip_url}/rabbitmq-server-generic-unix-${RABBITMQ_VERSION}.tar.xz && \
+            curl -Lv -o /srv/rmq.tar.xz $rmq_zip_url && \
+            tar -xvf rmq.tar.xz && rm -f rmq.tar.xz && \
+            touch /srv/rabbitmq_server-${RABBITMQ_VERSION}/etc/rabbitmq/enabled_plugins && \
+            rabbitmq-plugins enable --offline rabbitmq_management && \
+            rmq_ac_url=https://github.com/aweber/rabbitmq-autocluster/releases/download && \
+                rmq_ac_url=${rmq_ac_url}/${RABBITMQ_AUTOCLUSTER_PLUGIN_VERSION} && \
+                rmq_ac_url=${rmq_ac_url}/autocluster-${RABBITMQ_AUTOCLUSTER_PLUGIN_VERSION}.ez && \
+            curl -Lv -o ${PLUGINS_DIR}/autocluster-${RABBITMQ_AUTOCLUSTER_PLUGIN_VERSION}.ez $rmq_ac_url && \
             apk del --purge tar xz && rm -Rf /var/cache/apk/*
-EXPOSE      5671/tcp 5672/tcp 15672/tcp 15671/tcp
-VOLUME      /var/lib/rabbitmq
-CMD         ["/usr/bin/wrapper"]
