@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # When this exits, exit all back ground process also.
-trap 'kill $(jobs -p)' EXIT
+trap 'kill $(jobs -p) 2> /dev/null' EXIT
 
 # Die on error
 set -e
