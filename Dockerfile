@@ -36,4 +36,5 @@ RUN         chmod a+x /usr/bin/wrapper && apk add --update curl tar xz bash && \
                 rmq_ac_url=${rmq_ac_url}/${RABBITMQ_AUTOCLUSTER_PLUGIN_VERSION} && \
                 rmq_ac_url=${rmq_ac_url}/autocluster-${RABBITMQ_AUTOCLUSTER_PLUGIN_VERSION}.ez && \
             curl -Lv -o ${PLUGINS_DIR}/autocluster-${RABBITMQ_AUTOCLUSTER_PLUGIN_VERSION}.ez $rmq_ac_url && \
-            apk del --purge tar xz && rm -Rf /var/cache/apk/*
+            apk del --purge tar xz && rm -Rf /var/cache/apk/* && \
+            ln -sf $RABBITMQ_HOME /rabbitmq
