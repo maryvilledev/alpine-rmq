@@ -1,7 +1,7 @@
 FROM        alpine:3.2
 MAINTAINER  Gonkulator Labs <github.com/gonkulator>
 
-ENV         RABBITMQ_VERSION=3.6.0 \
+ENV         RABBITMQ_VERSION=3.6.1 \
             RABBITMQ_AUTOCLUSTER_PLUGIN_VERSION=0.4.1
 ENV         RABBITMQ_HOME=/srv/rabbitmq_server-${RABBITMQ_VERSION} \
             PLUGINS_DIR=/srv/rabbitmq_server-${RABBITMQ_VERSION}/plugins \
