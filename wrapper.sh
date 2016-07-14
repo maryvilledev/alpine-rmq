@@ -45,7 +45,8 @@ if [[ "${use_ssl}" == "yes" ]]; then
 
     echo "Launching RabbitMQ with SSL..."
     echo -e " - SSL_CERT_FILE: $SSL_CERT_FILE\n - SSL_KEY_FILE: $SSL_KEY_FILE\n - SSL_CA_FILE: $SSL_CA_FILE"
-    mv ${RABBITMQ_HOME}/etc/rabbitmq/ssl.config \
+    [[ -f ${RABBITMQ_HOME}/etc/rabbitmq/rabbitmq.config ]] || mv \
+        ${RABBITMQ_HOME}/etc/rabbitmq/ssl.config \
         ${RABBITMQ_HOME}/etc/rabbitmq/rabbitmq.config
 else
     echo "Launching RabbitMQ..."
