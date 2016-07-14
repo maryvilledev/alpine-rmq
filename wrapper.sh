@@ -49,7 +49,8 @@ if [[ "${use_ssl}" == "yes" ]]; then
         ${RABBITMQ_HOME}/etc/rabbitmq/rabbitmq.config
 else
     echo "Launching RabbitMQ..."
-    mv ${RABBITMQ_HOME}/etc/rabbitmq/standard.config \
+    [[ -f ${RABBITMQ_HOME}/etc/rabbitmq/rabbitmq.config ]] || mv \
+        ${RABBITMQ_HOME}/etc/rabbitmq/standard.config \
         ${RABBITMQ_HOME}/etc/rabbitmq/rabbitmq.config
 fi
 
