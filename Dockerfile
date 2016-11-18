@@ -1,8 +1,8 @@
-FROM        alpine:3.2
+FROM        alpine
 MAINTAINER  Gonkulator Labs <github.com/gonkulator>
 
-ENV         RABBITMQ_VERSION=3.6.1 \
-            RABBITMQ_AUTOCLUSTER_PLUGIN_VERSION=0.4.1
+ENV         RABBITMQ_VERSION=3.6.5 \
+            RABBITMQ_AUTOCLUSTER_PLUGIN_VERSION=0.6.1
 ENV         RABBITMQ_HOME=/srv/rabbitmq_server-${RABBITMQ_VERSION} \
             PLUGINS_DIR=/srv/rabbitmq_server-${RABBITMQ_VERSION}/plugins \
             ENABLED_PLUGINS_FILE=/srv/rabbitmq_server-${RABBITMQ_VERSION}/etc/rabbitmq/enabled_plugins \
