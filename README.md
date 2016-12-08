@@ -53,6 +53,3 @@ docker run -d \
 
 ### Customizing
 To set a custom config, ditch the wrapper script and call `rabbitmq-server` directly.  Place the custom config in `/srv/rabbitmq_server-3.6.0/etc/rabbitmq/`. To reduce startup complexity, the autocluster plugin is not enabled by default (our wrapper script enables it on demand). If you want to use it with a custom config, make sure to run `rabbitmq-plugins enable --offline autocluster` in the container before starting Rabbit.
-
-### Fair Warning!
-Alpine's Erlang packages are in its `edge` (testing) repo, if that bothers you then don't use this image!
