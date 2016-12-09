@@ -35,6 +35,6 @@ RUN         for p in erlang erlang-mnesia erlang-public-key erlang-crypto erlang
                 rmq_ac_url=${rmq_ac_url}/${RABBITMQ_AUTOCLUSTER_PLUGIN_VERSION} && \
                 rmq_ac_url=${rmq_ac_url}/autocluster-${RABBITMQ_AUTOCLUSTER_PLUGIN_VERSION}.tgz && \
             curl -L -o /tmp/autocluster-${RABBITMQ_AUTOCLUSTER_PLUGIN_VERSION}.tgz $rmq_ac_url && \
-            tar -x -C ${PLUGINS_DIR} -f /tmp/autocluster-${RABBITMQ_AUTOCLUSTER_PLUGIN_VERSION}.tgz && \
+            tar -x -C ${RABBITMQ_HOME} -f /tmp/autocluster-${RABBITMQ_AUTOCLUSTER_PLUGIN_VERSION}.tgz && \
             rm -Rf /var/cache/apk/*  /tmp/* && \
             ln -sf $RABBITMQ_HOME /rabbitmq
