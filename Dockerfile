@@ -7,7 +7,7 @@ ENV         RABBITMQ_HOME=/srv/rabbitmq_server-${RABBITMQ_VERSION} \
             PLUGINS_DIR=/srv/rabbitmq_server-${RABBITMQ_VERSION}/plugins \
             ENABLED_PLUGINS_FILE=/srv/rabbitmq_server-${RABBITMQ_VERSION}/etc/rabbitmq/enabled_plugins \
             RABBITMQ_MNESIA_BASE=/var/lib/rabbitmq \
-            ERLANG_VERSION=18.3.2-r0
+            ERLANG_VERSION=19.3.0-r3
 ENV         PATH=$PATH:$RABBITMQ_HOME/sbin
 
 COPY        ssl.config /srv/rabbitmq_server-${RABBITMQ_VERSION}/etc/rabbitmq/
